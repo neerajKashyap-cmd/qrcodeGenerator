@@ -1,51 +1,53 @@
 const User = require("../models/User")
 const bcrypt = require("bcrypt")
 
-exports.loginPage = (req,res)=>{
+exports.loginPage = (req, res) => {
 res.render("login")
 }
 
-exports.registerPage = (req,res)=>{
+exports.registerPage = (req, res) => {
 res.render("register")
 }
 
-exports.register = async (req,res)=>{
+exports.registerUser = async (req, res) => {
 
-const {email,password} = req.body
+const { userEmail, userPassword } = req.body
 
-const exist = await User.findOne({email:email})
+const existingUser = await User.findOne({ email: userEmail })
 
-if(exist){
-return res.send("User already exists")
+if (existingUser) {
+    return res.send("User already exists")
 }
 
-const hash = await bcrypt.hash(password,10)
+const hashedPass = await bcrypt.hash(userPassword, 10)
 
-const user = new User({
-email:email,
-password:hash
+const newUser = new User({
+    email: userEmail,
+    password: hashedPass
 })
 
-await user.save()
+await newUser.save()
 
 res.redirect("/auth/login")
+
 }
 
-exports.login = async (req,res)=>{
+exports.loginUser = async (req, res) => {
 
-const {email,password} = req.body
+const { userEmail, userPassword } = req.body
 
-const user = await User.findOne({email:email})
+const foundUser = await User.findOne({ email: userEmail })
 
-if(!user){
-return res.send("User not found")
+if (!foundUser) {
+    return res.send("User not found")
 }
 
-const match = await bcrypt.compare(password,user.password)
+const validPassword = await bcrypt.compare(userPassword, foundUser.password)
 
-if(!match){
-return res.send("Wrong password")
+if (!validPassword) {
+    return res.send("Wrong password")
 }
 
 res.redirect("/qr/dashboard")
+
 }

@@ -1,22 +1,14 @@
 <link rel="stylesheet" href="/css/style.css">
+
 <body>
+    <div class="container">
+        <h2>Login</h2>
+        <form action="/auth/login" method="POST"> <input type="email" name="userEmail" placeholder="Enter your email"
+                required> <input type="password" name="userPassword" placeholder="Enter password" required>
 
-<div class="container">
+            <button type="submit">Sign In</button>
 
-<h2>Login</h2>
-
-<form action="/auth/login" method="POST">
-
-<input type="email" name="email" placeholder="Email" required>
-
-<input type="password" name="password" placeholder="Password" required>
-
-<button type="submit">Login</button>
-
-</form>
-
-<a href="/auth/register">Create account</a>
-
-</div>
-
+        </form>
+        <div> <a href="/auth/register">Create a new account</a> </div>
+    </div>
 </body>

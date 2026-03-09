@@ -1,26 +1,28 @@
-const QR = require("../models/QR")
+const QRModel = require("../models/QR")
 const QRCode = require("qrcode")
 
-exports.dashboard = async (req,res)=>{
+exports.dashboard = async (req, res) => {
 
-const qrs = await QR.find()
+const allQrs = await QRModel.find()
 
-res.render("dashboard",{qrs:qrs})
+res.render("dashboard", { qrs: allQrs })
+
 }
 
-exports.generateQR = async (req,res)=>{
+exports.generateQR = async (req, res) => {
 
-const {data,type} = req.body
+const { qrData, qrType } = req.body
 
-const qrImage = await QRCode.toDataURL(data)
+const generatedImage = await QRCode.toDataURL(qrData)
 
-const qr = new QR({
-data:data,
-type:type,
-qrImage:qrImage
+const newQR = new QRModel({
+    data: qrData,
+    type: qrType,
+    qrImage: generatedImage
 })
 
-await qr.save()
+await newQR.save()
 
 res.redirect("/qr/dashboard")
+
 }

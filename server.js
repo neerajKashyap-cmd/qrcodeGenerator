@@ -4,31 +4,44 @@ const express = require("express")
 const mongoose = require("mongoose")
 const path = require("path")
 
-const authRoutes = require("./routes/auth")
-const qrRoutes = require("./routes/qr")
+const auth = require("./routes/auth")
+const qr = require("./routes/qr")
 
 const app = express()
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-// STATIC FILES (CSS, JS, images)
-app.use(express.static(path.join(__dirname, "public")))
+const staticFolder = path.join(__dirname, "public")
+app.use(express.static(staticFolder))
 
 app.set("view engine", "ejs")
-app.set("views", path.join(__dirname, "views"))
 
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.log(err))
+const viewsPath = path.join(__dirname, "views")
+app.set("views", viewsPath)
 
-app.use("/auth", authRoutes)
-app.use("/qr", qrRoutes)
+const mongoUrl = process.env.MONGO_URI
 
-app.get("/", (req, res) => {
-    res.redirect("/auth/login")
+mongoose.connect(mongoUrl)
+.then(() => {
+console.log("MongoDB connected")
+})
+.catch((err) => {
+console.log(err)
 })
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log("Server running on port 3000")
+app.use("/auth", auth)
+app.use("/qr", qr)
+
+app.get("/", (req, res) => {
+res.redirect("/auth/login")
+})
+
+let PORT = process.env.PORT
+if (!PORT) {
+PORT = 3000
+}
+
+app.listen(PORT, () => {
+console.log("Server running on port " + PORT)
 })
