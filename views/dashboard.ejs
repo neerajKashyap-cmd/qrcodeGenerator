@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="/css/style.css">
+
+<body>
+
+<div class="dashboard">
+
+<h2>Create QR</h2>
+
+<form action="/qr/generate" method="POST">
+
+<input type="text" name="data" placeholder="Enter URL or text">
+
+<select name="type">
+<option value="url">URL</option>
+<option value="text">Text</option>
+</select>
+
+<button type="submit">Generate QR</button>
+
+</form>
+
+<div class="qr-list">
+
+<% qrs.forEach(function(qr){ %>
+
+<div class="qr-card">
+
+<img src="<%= qr.qrImage %>">
+
+<p><%= qr.data %></p>
+
+<p>Scans: <%= qr.scanCount %></p>
+
+</div>
+
+<% }) %>
+
+</div>
+
+</div>
+
+</body>
